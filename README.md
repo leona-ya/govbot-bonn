@@ -7,6 +7,7 @@ in der eigene Bot-Experten getestet und entwickelt werden können. Chatbots die 
 $ git clone https://github.com/GovBotIO/govbot-sdk.git
 $ cd govbot-sdk
 $ npm install 
+$ mv .env.demo .env
 ``` 
 Das SDK wird mit folgendem Aufruf gestartet:
 ```
