@@ -49,8 +49,6 @@ var botDialog = [
         var gesamt = parkhaus.gesamt;
         var frei = parkhaus.frei;
         session.send("Derzeit sind im Parkhaus " + bezeichnung.initCap() + " noch " + frei + " von " + gesamt + " Parkplätzen frei.")
-        console.log("gesamt:" + gesamt)
-        console.log("frei:" + frei)
       }
     })
   }
