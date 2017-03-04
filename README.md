@@ -3,6 +3,7 @@
 - Wie voll ist das Parkhaus?
 - Das Parkhaus ist wie voll?
 - Ist das Parkhaus frei?
+
 # GovBot-SDK [![node: v4.4.7](https://img.shields.io/badge/node-v4.4.7-blue.svg)](https://nodejs.org/dist/latest-v4.x/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 Das GovBot-SDK stellt eine Entwicklungsumgebung für den [GovBot](https://www.govbot.io) bereit,  
 in der eigene Bot-Experten getestet und entwickelt werden können. Chatbots die mit diesem SDK entwickelt wurden können hinterher mit in den GovBot integriert werden.
