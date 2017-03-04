@@ -1,0 +1,32 @@
+{
+  "name": "govbot-SDK",
+  "version": "0.1.0",
+  "description": "GovBot - SDK",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GovBotIO/govbot-sdk.git"
+  },
+  "author": "publicplan GmbH",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GovBotIO/govbot-sdk/issues"
+  },
+  "homepage": "https://github.com/GovBotIO/govbot-sdk#readme",
+  "dependencies": {
+    "array.prototype.find": "^2.0.3",
+    "botbuilder": "^3.6.0",
+    "dotenv": "^2.0.0",
+    "json-query": "^2.2.0",
+    "jsonfile": "^2.4.0",
+    "mstranslator": "^2.1.0",
+    "request-promise": "^4.1.1",
+    "restify": "^4.1.1",
+    "string-template": "^1.0.0",
+    "striptags": "^3.0.1",
+    "when": "^3.7.7"
+  }
+}
