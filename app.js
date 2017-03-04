@@ -3,7 +3,7 @@ var builder = require('botbuilder');
 var config = {"variables": require('dotenv').config()};
 
 //=========================================================
-var aktivBot = 'botSdkDemo'; // Bot Name
+var aktivBot = 'botParkhausBelegung'; // Bot Name
 //=========================================================
 
 //=========================================================
