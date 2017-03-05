@@ -18,7 +18,6 @@ var botDialog = [
       session.userData.botData[botName] = {}
     }
     polizeistellenRequest().then(function (polizeistellenResult) {
-      console.log(polizeistellenResult)
       var polizeistellenJSON = JSON.parse(polizeistellenResult).features;
       var result = {
         "text": "Wähle die Polizeistelle",
@@ -50,7 +49,6 @@ var botDialog = [
         var plzort = polizeistelle.plzort;
         var telefon = polizeistelle.telefon;
         var email = polizeistelle.email;
-        console.log(polizeistelle)
         session.send("Die Daten der Polizeistelle " + name + " sind:");
         session.send("Adresse: " + adresse);
         session.send(plzort);
