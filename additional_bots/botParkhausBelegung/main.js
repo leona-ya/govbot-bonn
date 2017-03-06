@@ -10,85 +10,76 @@ var builder = require('botbuilder');
 
 var botRoute = '/' + botName;
 
-var station = 'Bonn';
 var serviceURL = 'http://www.bcp-bonn.de/stellplatz/bcpinfo.xml';
 
 var botDialog = [
   function (session, args, next) {
+    var message = session.message.text;
     if(session.userData.botData[botName] == undefined) {
       session.userData.botData[botName] = {}
     }
-    parkhausbelegungRequest().then(function (parkhausbelegungResult) {
-      var parkhausbelegungResultjs = xml2json.toJson(parkhausbelegungResult)
-      var parkhausbelegungJSON = JSON.parse(parkhausbelegungResultjs).parkhaeuser;
-      var result = {
-        "text": "Wähle das Parkhaus",
-        "type": "buttons_list",
-        "data": [],
-        "language": "de"
-      };
-      parkhausbelegungJSON.parkhaus.forEach(function (parkhaus) {
-        var bezeichnung = parkhaus.bezeichnung.replace(".txt", "")
-        result.data.push({
-          "title": bezeichnung.initCap(),
-          "response": bezeichnung.initCap()
-        })
-      })
-      session.userData.botData[botName].parkhausJSON = parkhausbelegungJSON;
-      var answerJson = session.toMessage(JSON.stringify(result));
-      // session.send("Tet");
-      builder.Prompts.text(session, answerJson);
-    });
+    // Wenn Parkhaus Auswahl bereits abgeschickt -> springe zum nächsten Schritt
+    if(session.userData.botData[botName].parkhausCard) {
+      next();
+    } else {
+      parkhausbelegungRequest().then(function (parkhausbelegungResult) {
+        var parkhausbelegungResultjs = xml2json.toJson(parkhausbelegungResult);
+        var parkhausbelegungJSON = JSON.parse(parkhausbelegungResultjs).parkhaeuser;
+        var result = {
+          "text": "Wähle das Parkhaus",
+          "type": "smart_answers",
+          "data": [],
+          "language": "de"
+        };
+        parkhausbelegungJSON.parkhaus.forEach(function (parkhaus) {
+          var bezeichnung = parkhaus.bezeichnung.replace(".txt", "");
+          result.data.push(bezeichnung.initCap())
+        });
+        session.userData.botData[botName].parkhausCard = result;
+        session.userData.botData[botName].parkhausJSON = parkhausbelegungJSON;
+        var answerJson = session.toMessage(JSON.stringify(result));
+        // session.send("Tet");
+        builder.Prompts.text(session, answerJson);
+      });
+    }
   },
   function (session, args, next) {
-    var message = session.message.text
-    var parkhausbelegungJSON = session.userData.botData[botName].parkhausJSON
+    var message = session.message.text;
+    var parkhausbelegungJSON = session.userData.botData[botName].parkhausJSON;
+    var resultText;
     parkhausbelegungJSON.parkhaus.forEach(function (parkhaus) {
-      var bezeichnung = parkhaus.bezeichnung.replace(".txt", "")
+      var bezeichnung = parkhaus.bezeichnung.replace(".txt", "");
       if(message == bezeichnung.initCap()) {
         var gesamt = parkhaus.gesamt;
         var frei = parkhaus.frei;
-        session.send("Derzeit sind im Parkhaus " + bezeichnung.initCap() + " noch " + frei + " von " + gesamt + " Parkplätzen frei.")
+        resultText = "Derzeit sind im Parkhaus " + bezeichnung.initCap() + " noch " + frei + " von " + gesamt + " Parkplätzen frei."
       }
-    })
+    });
+    if(resultText) {
+      var result = session.userData.botData[botName].parkhausCard;
+      result.text = resultText;
+      result.data = result.data.filter(function (parkhaus) {
+        return (parkhaus != message);
+      });
+      var answerJson = session.toMessage(JSON.stringify(result));
+      if(result.data.length) {
+        // So lange noch nicht alle Parkhäuser abgefragt wurden -> Dialog offen lassen
+        session.send(answerJson);
+      } else {
+        // wenn alle Parkhäuse abgefragt -> Dialog beenden mit abgefragten Parkhaus Daten
+        session.endDialog(resultText);
+      }
+    } else {
+      // Wenn keine gültige Auswahl -> sende Nachricht an den Haupt Dialog
+      session.replaceDialog('/');
+    }
   }
 ];
 
 function parkhausbelegungRequest() {
   //requestOverview
-  var xmlfile = rp({uri: serviceURL});
-  return xmlfile;
+  return rp({uri: serviceURL});
 }
 
-function generateAnswerText(parkhausbelegungResult) {
-  var answerTextRaw = resolveAnswers[shared.randomWithRange(0, resolveAnswers.length)];
-  var value = parkhausbelegungResult.currentMeasurement.value;
-  var unit = parkhausbelegungResult.unit;
-
-  var answerText = format(answerTextRaw, {
-    station: station,
-    value: value,
-    unit: unit
-  });
-
-  return answerText;
-}
-
-function generateAnswerJson(session, parkhausbelegungResult, answerText) {
-  return JSON.stringify({
-    "botname": botName,
-    "type": "pegelstand",
-    "data": parkhausbelegungResult,
-    "text": answerText,
-    "language": session.userData.language,
-    "location": station
-  });
-}
-
-var resolveAnswers = [
-  'Der aktuelle Pegelstand beträgt für {station} beträgt {value}{unit}.',
-  'Für {station} liegt der aktuelle Pegelstand bei {value}{unit}.',
-  'Aktuell liegt der Pegelstand für {station} bei {value}{unit}.'
-];
 
 module.exports = botDialog;
