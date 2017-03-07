@@ -50,9 +50,13 @@ var botDialog = [
     parkhausbelegungJSON.parkhaus.forEach(function (parkhaus) {
       var bezeichnung = parkhaus.bezeichnung.replace(".txt", "");
       if(message == bezeichnung.initCap()) {
-        var gesamt = parkhaus.gesamt;
-        var frei = parkhaus.frei;
-        resultText = "Derzeit sind im Parkhaus " + bezeichnung.initCap() + " noch " + frei + " von " + gesamt + " Parkplätzen frei."
+        if(parkhaus.status == 0) {
+          var gesamt = parkhaus.gesamt;
+          var frei = parkhaus.frei;
+          resultText = "Derzeit sind im Parkhaus " + bezeichnung.initCap() + " noch " + frei + " von " + gesamt + " Parkplätzen frei."
+        } else {
+          resultText = "Das Parkhaus " + bezeichnung.initCap() + " ist derzeit geschlossen.";
+        }
       }
     });
     if(resultText) {
