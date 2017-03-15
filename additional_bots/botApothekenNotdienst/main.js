@@ -21,10 +21,11 @@ var botDialog = [
   },
   function (session, args, next) {
     var message = session.message.text
-    rp({uri: "https://maps.googleapis.com/maps/api/geocode/json?key=" + config.variables.GOOGLEMAPS_GEOCODING_APIKEY + "&address=" + message}).then(function (response) {
+    rp({uri: "http://nominatim.openstreetmap.org/search?format=json&q=" + message}).then(function (response) {
       response = JSON.parse(response)
-      var lat = response.results[0].geometry.location.lat;
-      var lng = response.results[0].geometry.location.lng;
+      var lat = response[0].lat;
+      var lng = response[0].lon;
+
       apothekenNotdienstRequest(lat, lng).then(function (apothekenNotdienstResult) {
         var apothekenNotdienstResultjs = xml2json.toJson(apothekenNotdienstResult)
         var apothekenNotdienstJSON = JSON.parse(apothekenNotdienstResultjs);
@@ -62,7 +63,7 @@ function apothekenNotdienstRequest(lat, lng) {
   var currentDay = date.getDate()
   var currentMonth = date.getMonth()
   var currentYear = date.getFullYear()
-  var xmlfile = rp({uri: serviceURL + "?m=koord&w=" + Number((lat).toFixed(5)) + ";" + Number((lng).toFixed(5)) + "&z=" + currentYear + "-" + currentMonth + "-" + currentDay + ";" + currentYear + "-" + currentMonth + "-" + currentDay + "&c=utf8&a=2"});
+  var xmlfile = rp({uri: serviceURL + "?m=koord&w=" + Number(lat).toFixed(5) + ";" + Number(lng).toFixed(5) + "&z=" + currentYear + "-" + currentMonth + "-" + currentDay + ";" + currentYear + "-" + currentMonth + "-" + currentDay + "&c=utf8&a=2"});
   return xmlfile;
 }
 

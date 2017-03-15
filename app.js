@@ -3,7 +3,7 @@ var builder = require('botbuilder');
 var config = {"variables": require('dotenv').config()};
 
 //=========================================================
-var aktivBot = 'botPolizeistellen'; // Bot Name
+var aktivBot = 'botApothekenNotdienst'; // Bot Name
 //=========================================================
 
 //=========================================================
