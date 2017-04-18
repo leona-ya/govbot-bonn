@@ -1,15 +1,15 @@
 # Parkhaus Belegung Experten-Bot
-##Hört Auf
+## Hört Auf
 - Wie voll ist das Parkhaus?
 - Das Parkhaus ist wie voll?
 - Ist das Parkhaus frei?
 
 # Apotheken-Notdienst Experten-Bot
-##Hört Auf
+## Hört Auf
 - Welche Apotheke hat (zuzeit) Notdienst?
 
 # Polizeidienststellen Kontakt Experten-Bot
-##Hört Auf
+## Hört Auf
 - Wie kontaktiere ich die nächste Polizeidienststelle?
 - Wo ist die nächste Polizeidienststelle?
 
